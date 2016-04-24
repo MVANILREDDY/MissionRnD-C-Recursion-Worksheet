@@ -23,8 +23,30 @@
 */
 #include "stdafx.h"
 
-
+void count_diff_ways(int, int*);
 int get_steps(int s)
 {
-	return 0;
+	if (s <= 0)
+		return 0;
+	else
+	{
+		int count = 0;
+		count_diff_ways(s, &count);
+		return count;
+	}
+}
+void count_diff_ways(int s, int *count)
+{
+	if (s == 0)
+	{
+		(*count)++;
+	}
+	else
+	{
+		count_diff_ways(s - 1, count);
+		if (s - 1 != 0)
+		{
+			count_diff_ways(s - 2, count);
+		}
+	}
 }
