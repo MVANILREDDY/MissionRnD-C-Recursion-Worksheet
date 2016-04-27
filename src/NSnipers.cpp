@@ -43,6 +43,81 @@ P.S: The Above Problem is just a modified version of a popular BackTracking prob
 */
 
 #include "stdafx.h"
+int valid_place(int * battlefiled, int row, int col, int n);
+int backtrack(int * battlefield, int n, int row, int col, int * chk);
 int solve_nsnipers(int *battlefield, int n){
-	return 0;
+	if (n <= 3 || battlefield == NULL)
+		return 0;
+	int chk = 0;
+	int result = backtrack(battlefield, n, 0, 0, &chk);
+	 if(result)
+		return 1;
+	else
+		return 0;
+	
 }
+
+int validplace(int * battlefiled, int row, int col, int n){
+	for (int i = 0; i < n; i++)
+	{
+		if (*((battlefiled + row*n) + i) == 1)
+			return 0;
+	}
+	for (int i = 0; i < row; i++)
+	{
+		if (*((battlefiled + i*n) + col) == 1)
+			return 0;
+	}
+	int a = row, b = col;
+	while (a != -1 && b != -1)
+	{
+		if (*((battlefiled + a*n) + b) == 1)
+			return 0;
+		a--; b--;
+	}a = row, b = col;
+	while (a != -1 && b != n)
+	{
+		if (*((battlefiled + a*n) + b) == 1)
+			return 0;
+		a--;
+		b++;
+	}
+	return 1;
+}
+int backtrack(int * battlefield, int n, int row, int col, int * chk){
+	if (row == n || col == n)
+		return 0;
+	else{
+		if (validplace(battlefield, row, col, n)){
+			*((battlefield + row*n) + col) = 1;
+			if (row == n - 1)
+			{
+				*chk = 1;
+				return 0;
+			}
+			int res =backtrack(battlefield, n, row + 1, 0, chk);
+			if (res)
+				return 1;
+			else{
+				*((battlefield + row*n) + col) = 0;
+				backtrack(battlefield, n, row, col + 1, chk);
+			}
+		}
+		else{
+			int res = backtrack(battlefield, n, row, col + 1, chk);
+			if (res && !chk){
+				*((battlefield + row*n) + col) = 1;
+				return backtrack(battlefield, n, row + 1, 0, chk);
+			}
+			else{
+				if (!(*chk)){
+					*((battlefield + row*n) + col) = 0;
+					return 0;
+				}
+			}
+			return 1;
+		}
+	}
+}
+
+
